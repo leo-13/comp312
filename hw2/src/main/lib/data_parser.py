@@ -115,8 +115,6 @@ def street_cleaning_by_neighborhood(neighborhood, towed_vehicle_file_name, sweep
 
 
 if __name__ == '__main__':
-
-
     # Get # number of towed vehicles for each neighborhood for last 90 days (west, south, northwest and downtown)
     # Check if there was street cleaning on this dates in this area
     for city_neighborhood in towing_locations.values():
@@ -137,14 +135,14 @@ if __name__ == '__main__':
                                                       str(south_street_cleaning_by_date[d_date]))
             )
 
-    print(
-        '\nMy initial goal was to find correlation between number of parking tickets and street cleaning in the ares.')
-    print(
-        'I wasn\'t able to find parking violations data on Chicago Data Portal, and I decided to go with towed vehicles.')
+    print('\nMy initial goal was to find correlation between number of parking tickets and \
+street cleaning in the ares.')
+    print('I wasn\'t able to find parking violations data on Chicago Data Portal, \
+and I decided to go with towed vehicles.')
     print('Here my expectation was that the correlation didn\'t exist, since most of the vehicles just get parking \
-    tickets during street cleaning.')
+tickets during street cleaning.')
     print('The data supports my hypothesis. On days with large number of towed vehicles there may or may not be\
-     street cleaning in the area.')
+street cleaning in the area.')
     print('\nTwo assumptions that I had to make:')
     print('     1. Towed vehicles data did not include \'towed from\' address. It only had \'towed to\' one.')
     print('        Since there were only 5 towing facilities, I split them into groups by neighborhood.')

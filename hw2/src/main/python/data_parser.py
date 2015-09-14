@@ -25,13 +25,14 @@ towing_locations = {
     'Police Pound': 'south'
 }
 
-
+# returns a DictReader for a given csv file
 def read_csv(filename):
     csv_file = open('../resources/' + filename, newline='')
     file_reader = csv.DictReader(csv_file, delimiter=',', quotechar='"')
     return file_reader
 
 
+# returns a list of dictionaries in format { 'neighborhood' : [street cleaning dates] }
 def get_sweeping_data():
     data_list = []
     dict_reader = read_csv(sweeping_schedule_file)
@@ -52,6 +53,7 @@ def get_sweeping_data():
     return group_data_by_column(data_list, neighborhood_column_name, sweep_dates_column_name)
 
 
+# returns a list of towed vehicles in format { 'neighborhood' : [towed dates] }
 def get_towed_data():
     data_list = []
     dict_reader = read_csv(towed_vehicle_file)
@@ -66,6 +68,7 @@ def get_towed_data():
     return group_data_by_column(data_list, neighborhood_column_name, tow_date_column_name)
 
 
+# maps wards to neighborhoods
 def get_ward_neighborhood_map():
     data_dict = {}
     dict_reader = read_csv(ward_neighborhood_file)
@@ -74,6 +77,7 @@ def get_ward_neighborhood_map():
     return data_dict
 
 
+# groups data in list of dictionaries { 'key' : [data_list] } by given key. Returns a dictionary { 'key' : [grouped_data_list] }
 def group_data_by_column(data, groupby_column_name, second_column_name):
     sorted_data = sorted(data, key=lambda item: item[groupby_column_name])
     grouped_dict = {}
@@ -87,6 +91,7 @@ def group_data_by_column(data, groupby_column_name, second_column_name):
     return grouped_dict
 
 
+# returns a dictionary of dates with numbers of towed vehicales
 def get_number_of_towed_vehicles_by_neighborhood(neighborhood):
     data_dict = {}
     dates = towed_vehicles_dates_by_neighborhood[neighborhood]
@@ -95,6 +100,7 @@ def get_number_of_towed_vehicles_by_neighborhood(neighborhood):
     return data_dict
 
 
+# returns a dictionary of dates with street cleaning info for each date
 def street_cleaning_by_neighborhood(neighborhood):
     data_dict = {}
     towed_dates = towed_vehicles_dates_by_neighborhood[neighborhood]

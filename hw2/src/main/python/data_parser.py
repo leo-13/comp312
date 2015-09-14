@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 __author__ = 'Leonid'
 import csv
 from datetime import date

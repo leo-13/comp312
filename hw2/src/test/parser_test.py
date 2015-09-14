@@ -5,7 +5,7 @@ __author__ = 'Leonid'
 import unittest
 from datetime import date
 
-from lib import data_parser
+from src.lib import data_parser
 
 
 class DataParserTest(unittest.TestCase):

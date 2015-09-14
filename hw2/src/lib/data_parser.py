@@ -27,7 +27,7 @@ towing_locations = {
 
 # returns a DictReader for a given csv file
 def read_csv(filename):
-    csv_file = open('../resources/' + filename, newline='')
+    csv_file = open('./resources/' + filename, newline='')
     file_reader = csv.DictReader(csv_file, delimiter=',', quotechar='"')
     return file_reader
 

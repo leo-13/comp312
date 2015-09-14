@@ -27,15 +27,15 @@ towing_locations = {
 
 # returns a DictReader for a given csv file
 def read_csv(filename):
-    csv_file = open('../resources/' + filename, newline='')
+    csv_file = open('./resources/' + filename, newline='')
     file_reader = csv.DictReader(csv_file, delimiter=',', quotechar='"')
     return file_reader
 
 
 # returns a list of dictionaries in format { 'neighborhood' : [street cleaning dates] }
-def get_sweeping_data():
+def get_sweeping_data(file_name):
     data_list = []
-    dict_reader = read_csv(sweeping_schedule_file)
+    dict_reader = read_csv(file_name)
     ward_neighborhood_map = get_ward_neighborhood_map()
     for row in dict_reader:
         row_dict = {}
@@ -54,9 +54,9 @@ def get_sweeping_data():
 
 
 # returns a list of towed vehicles in format { 'neighborhood' : [towed dates] }
-def get_towed_data():
+def get_towed_data(file_name):
     data_list = []
-    dict_reader = read_csv(towed_vehicle_file)
+    dict_reader = read_csv(file_name)
     for row in dict_reader:
         row_dict = {}
         for key in row:
@@ -111,8 +111,8 @@ def street_cleaning_by_neighborhood(neighborhood):
 
 
 if __name__ == '__main__':
-    towed_vehicles_dates_by_neighborhood = get_towed_data()
-    street_sweeping_schedule_by_neighborhood = get_sweeping_data()
+    towed_vehicles_dates_by_neighborhood = get_towed_data(towed_vehicle_file)
+    street_sweeping_schedule_by_neighborhood = get_sweeping_data(sweeping_schedule_file)
 
     # Get # number of towed vehicles for each neighborhood for last 90 days (west, south, northwest and downtown)
     # Check if there was street cleaning on this dates in this area

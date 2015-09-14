@@ -1,0 +1,1 @@
+Both data_parser.py and parser.py should be executed from 'src' folder to avoid issues with relative path.

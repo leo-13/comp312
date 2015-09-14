@@ -12,6 +12,8 @@ sweep_dates_column_name = 'DATES'
 tow_date_column_name = 'Date'
 tow_address_column_name = 'Address'
 neighborhood_column_name = 'NEIGHBORHOOD'
+
+# manually divided 'towing to' locations into neighborhoods
 towing_locations = {
     '10300 S. Doty': 'south',
     '400 E. Lower Wacker': 'downtown',
@@ -68,6 +70,7 @@ def get_ward_neighborhood_map():
         data_dict[int(row[ward_column_name])] = row[neighborhood_column_name]
     return data_dict
 
+
 def group_data_by_column(data, groupby_column_name, second_column_name):
     sorted_data = sorted(data, key=lambda item: item[groupby_column_name])
     grouped_dict = {}
@@ -81,4 +84,37 @@ def group_data_by_column(data, groupby_column_name, second_column_name):
     return grouped_dict
 
 
-list1 = get_towed_data()
+def get_number_of_towed_vehicles_by_neighborhood(neighborhood):
+    data_dict = {}
+    dates = towed_vehicles_dates_by_neighborhood[neighborhood]
+    for d in dates:
+        data_dict[d] = dates.count(d)
+    return data_dict
+
+
+def street_cleaning_by_neighborhood(neighborhood):
+    data_dict = {}
+    towed_dates = towed_vehicles_dates_by_neighborhood[neighborhood]
+    cleaning_dates = street_sweeping_schedule_by_neighborhood[neighborhood]
+    for d in towed_dates:
+        data_dict[d] = d in cleaning_dates
+    return data_dict
+
+
+towed_vehicles_dates_by_neighborhood = get_towed_data()
+street_sweeping_schedule_by_neighborhood = get_sweeping_data()
+
+# a = street_cleaning_by_neighborhood('south')
+# print(a)
+
+# Get # number of towed vehicles for each neighborhood for last 90 days (west, south, northwest and downtown)
+# Check if there was street cleaning on this dates in this area
+
+for city_neighborhood in towing_locations.values():
+    print('_______')
+    print('Towed vehicles against street cleaning data for neighborhood ' + city_neighborhood)
+    towed_number_by_date = get_number_of_towed_vehicles_by_neighborhood(city_neighborhood)
+    south_street_cleaning_by_date = street_cleaning_by_neighborhood(city_neighborhood)
+    print('Date      ', 'Towed #', 'Street Cleaning')
+    for d_date, number in towed_number_by_date.items():
+        print(str(d_date), repr(number), str(south_street_cleaning_by_date[d_date]))

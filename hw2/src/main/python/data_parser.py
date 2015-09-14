@@ -121,3 +121,10 @@ for city_neighborhood in towing_locations.values():
     for d_date, number in towed_number_by_date.items():
         print(
             '| {0:11} | {1:8} | {2:15} |'.format(str(d_date), str(number), str(south_street_cleaning_by_date[d_date])))
+
+print('\nMy initial goal was to find correlation between number of parking tickets and street cleaning in the ares.')
+print('I wasn\'t able to find parking violations data on Chicago Data Portal, and I decided to go with towed vehicles.')
+print(
+    'Here my expectation was that the correlation didn\'t exist, since most of the vehicles just get parking tickets during street cleaning.')
+print(
+    'The data supports my hypothesis. On days with large number of towed vehicles there may or may not be street cleaning in the area.')

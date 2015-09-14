@@ -20,55 +20,55 @@ towing_locations = {
 
 
 def read_csv(filename):
-    csvfile = open('../resources/' + filename, newline='')
-    filereader = csv.DictReader(csvfile, delimiter=',', quotechar='"')
-    return filereader
+    csv_file = open('../resources/' + filename, newline='')
+    file_reader = csv.DictReader(csv_file, delimiter=',', quotechar='"')
+    return file_reader
 
 
 def get_sweeping_data():
     data_list = []
-    dictreader = read_csv(sweeping_schedule_file)
-    for row in dictreader:
-        rowdict = {}
+    dict_reader = read_csv(sweeping_schedule_file)
+    for row in dict_reader:
+        row_dict = {}
         for key in row:
             if key == ward_column_name:
-                rowdict[key] = int(row[key])
+                row_dict[key] = int(row[key])
             elif key == sweep_dates_column_name:
                 dates = []
-                monthnumber = row['MONTH NUMBER']
+                month_number = row['MONTH NUMBER']
                 days = row[key].split(',')
                 for day in days:
-                    dates.append(date(2015, int(monthnumber), int(day)))
-                rowdict[key] = dates
-        data_list.append(rowdict)
+                    dates.append(date(2015, int(month_number), int(day)))
+                row_dict[key] = dates
+        data_list.append(row_dict)
     return group_data_by_column(data_list, ward_column_name, sweep_dates_column_name)
 
 
 def get_towed_data():
     data_list = []
-    dictreader = read_csv(towed_vehicle_file)
-    for row in dictreader:
-        rowdict = {}
+    dict_reader = read_csv(towed_vehicle_file)
+    for row in dict_reader:
+        row_dict = {}
         for key in row:
             if key == tow_address_column_name:
-                rowdict[key] = towing_locations.get(row[key])
+                row_dict[key] = towing_locations.get(row[key])
             elif key == tow_date_column_name:
-                rowdict[key] = datetime.strptime(row[key], '%m/%d/%Y').date()
-        data_list.append(rowdict)
+                row_dict[key] = datetime.strptime(row[key], '%m/%d/%Y').date()
+        data_list.append(row_dict)
     return group_data_by_column(data_list, tow_address_column_name, tow_date_column_name)
 
 
-def group_data_by_column(data, groupbycolumnname, secondcolumnname):
-    sorteddata = sorted(data, key=lambda item: item[groupbycolumnname])
-    groupeddict = {}
-    for key, group in groupby(sorteddata, lambda item: item[groupbycolumnname]):
-        groupeddict[key] = []
+def group_data_by_column(data, groupby_column_name, second_column_name):
+    sorted_data = sorted(data, key=lambda item: item[groupby_column_name])
+    grouped_dict = {}
+    for key, group in groupby(sorted_data, lambda item: item[groupby_column_name]):
+        grouped_dict[key] = []
         for gr in group:
             try:
-                groupeddict[key] += (gr[secondcolumnname])
+                grouped_dict[key] += (gr[second_column_name])
             except TypeError:
-                groupeddict[key].append(gr[secondcolumnname])
-    return groupeddict
+                grouped_dict[key].append(gr[second_column_name])
+    return grouped_dict
 
 
 list1 = get_towed_data()

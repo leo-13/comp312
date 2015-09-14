@@ -5,6 +5,7 @@ import csv
 from datetime import date
 from datetime import datetime
 from itertools import groupby
+from collections import OrderedDict
 
 sweeping_schedule_file = 'sweeping_schedule.csv'
 towed_vehicle_file = 'towed_vehicles.csv'
@@ -116,13 +117,17 @@ for city_neighborhood in towing_locations.values():
     print('_' * 44 + '\n')
     print('Towed vehicles against street cleaning data for neighborhood ' + city_neighborhood)
     towed_number_by_date = get_number_of_towed_vehicles_by_neighborhood(city_neighborhood)
+    towed_number_by_date_sorted = OrderedDict(
+        sorted(towed_number_by_date.items(), key=lambda item: item[1], reverse=True))
     south_street_cleaning_by_date = street_cleaning_by_neighborhood(city_neighborhood)
     print('-' * 44)
-    print('| {0:11} | {1:8} | {2:15} |'.format('Date', 'Towed #', 'Street Cleaning'))
+    print('| {0:11} | {1:12} | {2:15} |'.format('Date', 'Towed Count', 'Street Cleaning'))
     print('-' * 44)
-    for d_date, number in towed_number_by_date.items():
+    # for d_date, number in towed_number_by_date.items():
+    for d_date, number in towed_number_by_date_sorted.items():
         print(
-            '| {0:11} | {1:8} | {2:15} |'.format(str(d_date), str(number), str(south_street_cleaning_by_date[d_date])))
+            '| {0:11} | {1:12} | {2:15} |'.format(str(d_date), str(number), str(south_street_cleaning_by_date[d_date]))
+        )
 
 print('\nMy initial goal was to find correlation between number of parking tickets and street cleaning in the ares.')
 print('I wasn\'t able to find parking violations data on Chicago Data Portal, and I decided to go with towed vehicles.')

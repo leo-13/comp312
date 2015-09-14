@@ -6,10 +6,12 @@ from itertools import groupby
 
 sweeping_schedule_file = 'sweeping_schedule.csv'
 towed_vehicle_file = 'towed_vehicles.csv'
+ward_neighborhood_file = 'ward_neighborhood_mapping.csv'
 ward_column_name = 'WARD'
 sweep_dates_column_name = 'DATES'
 tow_date_column_name = 'Date'
 tow_address_column_name = 'Address'
+neighborhood_column_name = 'NEIGHBORHOOD'
 towing_locations = {
     '10300 S. Doty': 'south',
     '400 E. Lower Wacker': 'downtown',
@@ -28,11 +30,12 @@ def read_csv(filename):
 def get_sweeping_data():
     data_list = []
     dict_reader = read_csv(sweeping_schedule_file)
+    ward_neighborhood_map = get_ward_neighborhood_map()
     for row in dict_reader:
         row_dict = {}
         for key in row:
             if key == ward_column_name:
-                row_dict[key] = int(row[key])
+                row_dict[neighborhood_column_name] = ward_neighborhood_map.get(int(row[key]))
             elif key == sweep_dates_column_name:
                 dates = []
                 month_number = row['MONTH NUMBER']
@@ -41,7 +44,7 @@ def get_sweeping_data():
                     dates.append(date(2015, int(month_number), int(day)))
                 row_dict[key] = dates
         data_list.append(row_dict)
-    return group_data_by_column(data_list, ward_column_name, sweep_dates_column_name)
+    return group_data_by_column(data_list, neighborhood_column_name, sweep_dates_column_name)
 
 
 def get_towed_data():
@@ -51,12 +54,19 @@ def get_towed_data():
         row_dict = {}
         for key in row:
             if key == tow_address_column_name:
-                row_dict[key] = towing_locations.get(row[key])
+                row_dict[neighborhood_column_name] = towing_locations.get(row[key])
             elif key == tow_date_column_name:
                 row_dict[key] = datetime.strptime(row[key], '%m/%d/%Y').date()
         data_list.append(row_dict)
-    return group_data_by_column(data_list, tow_address_column_name, tow_date_column_name)
+    return group_data_by_column(data_list, neighborhood_column_name, tow_date_column_name)
 
+
+def get_ward_neighborhood_map():
+    data_dict = {}
+    dict_reader = read_csv(ward_neighborhood_file)
+    for row in dict_reader:
+        data_dict[int(row[ward_column_name])] = row[neighborhood_column_name]
+    return data_dict
 
 def group_data_by_column(data, groupby_column_name, second_column_name):
     sorted_data = sorted(data, key=lambda item: item[groupby_column_name])

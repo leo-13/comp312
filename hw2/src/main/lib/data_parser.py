@@ -36,7 +36,7 @@ def read_csv(filename):
 def get_sweeping_data(file_name):
     data_list = []
     dict_reader = read_csv(file_name)
-    ward_neighborhood_map = get_ward_neighborhood_map()
+    ward_neighborhood_map = get_ward_neighborhood_map(ward_neighborhood_file)
     for row in dict_reader:
         row_dict = {}
         for key in row:
@@ -69,15 +69,16 @@ def get_towed_data(file_name):
 
 
 # maps wards to neighborhoods
-def get_ward_neighborhood_map():
+def get_ward_neighborhood_map(file_name):
     data_dict = {}
-    dict_reader = read_csv(ward_neighborhood_file)
+    dict_reader = read_csv(file_name)
     for row in dict_reader:
         data_dict[int(row[ward_column_name])] = row[neighborhood_column_name]
     return data_dict
 
 
-# groups data in list of dictionaries { 'key' : [data_list] } by given key. Returns a dictionary { 'key' : [grouped_data_list] }
+# groups data in list of dictionaries { 'key' : [data_list] } by given key.
+# Returns a dictionary { 'key' : [grouped_data_list] }
 def group_data_by_column(data, groupby_column_name, second_column_name):
     sorted_data = sorted(data, key=lambda item: item[groupby_column_name])
     grouped_dict = {}
@@ -91,9 +92,10 @@ def group_data_by_column(data, groupby_column_name, second_column_name):
     return grouped_dict
 
 
-# returns a dictionary of dates with numbers of towed vehicales
-def get_number_of_towed_vehicles_by_neighborhood(neighborhood):
+# returns a dictionary of dates with numbers of towed vehicles
+def get_number_of_towed_vehicles_by_neighborhood(neighborhood, towed_vehicle_file_name):
     data_dict = {}
+    towed_vehicles_dates_by_neighborhood = get_towed_data(towed_vehicle_file_name)
     dates = towed_vehicles_dates_by_neighborhood[neighborhood]
     for d in dates:
         data_dict[d] = dates.count(d)
@@ -101,8 +103,10 @@ def get_number_of_towed_vehicles_by_neighborhood(neighborhood):
 
 
 # returns a dictionary of dates with street cleaning info for each date
-def street_cleaning_by_neighborhood(neighborhood):
+def street_cleaning_by_neighborhood(neighborhood, towed_vehicle_file_name, sweeping_schedule_file_name):
     data_dict = {}
+    towed_vehicles_dates_by_neighborhood = get_towed_data(towed_vehicle_file_name)
+    street_sweeping_schedule_by_neighborhood = get_sweeping_data(sweeping_schedule_file_name)
     towed_dates = towed_vehicles_dates_by_neighborhood[neighborhood]
     cleaning_dates = street_sweeping_schedule_by_neighborhood[neighborhood]
     for d in towed_dates:
@@ -111,18 +115,18 @@ def street_cleaning_by_neighborhood(neighborhood):
 
 
 if __name__ == '__main__':
-    towed_vehicles_dates_by_neighborhood = get_towed_data(towed_vehicle_file)
-    street_sweeping_schedule_by_neighborhood = get_sweeping_data(sweeping_schedule_file)
+
 
     # Get # number of towed vehicles for each neighborhood for last 90 days (west, south, northwest and downtown)
     # Check if there was street cleaning on this dates in this area
     for city_neighborhood in towing_locations.values():
         print('_' * 44 + '\n')
         print('Towed vehicles against street cleaning data for neighborhood ' + city_neighborhood)
-        towed_number_by_date = get_number_of_towed_vehicles_by_neighborhood(city_neighborhood)
+        towed_number_by_date = get_number_of_towed_vehicles_by_neighborhood(city_neighborhood, towed_vehicle_file)
         towed_number_by_date_sorted = OrderedDict(
             sorted(towed_number_by_date.items(), key=lambda item: item[1], reverse=True))
-        south_street_cleaning_by_date = street_cleaning_by_neighborhood(city_neighborhood)
+        south_street_cleaning_by_date = street_cleaning_by_neighborhood(city_neighborhood, towed_vehicle_file,
+                                                                        sweeping_schedule_file)
         print('-' * 44)
         print('| {0:11} | {1:12} | {2:15} |'.format('Date', 'Towed Count', 'Street Cleaning'))
         print('-' * 44)

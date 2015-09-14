@@ -124,7 +124,12 @@ for city_neighborhood in towing_locations.values():
 
 print('\nMy initial goal was to find correlation between number of parking tickets and street cleaning in the ares.')
 print('I wasn\'t able to find parking violations data on Chicago Data Portal, and I decided to go with towed vehicles.')
-print(
-    'Here my expectation was that the correlation didn\'t exist, since most of the vehicles just get parking tickets during street cleaning.')
-print(
-    'The data supports my hypothesis. On days with large number of towed vehicles there may or may not be street cleaning in the area.')
+print('Here my expectation was that the correlation didn\'t exist, since most of the vehicles just get parking \
+tickets during street cleaning.')
+print('The data supports my hypothesis. On days with large number of towed vehicles there may or may not be\
+ street cleaning in the area.')
+print('\nTwo assumptions that I had to make:')
+print('     1. Towed vehicles data did not include \'towed from\' address. It only had \'towed to\' one.')
+print('        Since there were only 5 towing facilities, I split them into groups by neighborhood.')
+print('     2. I wasn\'t able to find data that maps an address with a particular Chicago Ward.')
+print('        So, I manually split the wards buy neighborhood, according to the map.)')

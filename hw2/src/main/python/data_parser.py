@@ -111,10 +111,13 @@ street_sweeping_schedule_by_neighborhood = get_sweeping_data()
 # Check if there was street cleaning on this dates in this area
 
 for city_neighborhood in towing_locations.values():
-    print('_______')
+    print('_' * 44 + '\n')
     print('Towed vehicles against street cleaning data for neighborhood ' + city_neighborhood)
     towed_number_by_date = get_number_of_towed_vehicles_by_neighborhood(city_neighborhood)
     south_street_cleaning_by_date = street_cleaning_by_neighborhood(city_neighborhood)
-    print('Date      ', 'Towed #', 'Street Cleaning')
+    print('-' * 44)
+    print('| {0:11} | {1:8} | {2:15} |'.format('Date', 'Towed #', 'Street Cleaning'))
+    print('-' * 44)
     for d_date, number in towed_number_by_date.items():
-        print(str(d_date), repr(number), str(south_street_cleaning_by_date[d_date]))
+        print(
+            '| {0:11} | {1:8} | {2:15} |'.format(str(d_date), str(number), str(south_street_cleaning_by_date[d_date])))
